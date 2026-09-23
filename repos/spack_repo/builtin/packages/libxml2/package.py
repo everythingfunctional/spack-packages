@@ -208,11 +208,20 @@ class Libxml2(AutotoolsPackage, CMakePackage, NMakePackage):
 class AnyBuilder(BaseBuilder):
     @run_after("install")
     def install_python_bindings(self):
-        # Manually invoke pip in the python subdirectory for versions that dropped autotools python integration
+        # Manually invoke pip in the python subdirectory
+        # for versions that dropped autotools python integration
         if self.spec.satisfies("@2.13: +python"):
             with working_dir("python"):
                 python_cmd = self.spec["python"].command
-                python_cmd("-m", "pip", "install", "--no-build-isolation", "--no-deps", "--prefix={0}".format(self.prefix), ".")
+                python_cmd(
+                    "-m",
+                    "pip",
+                    "install",
+                    "--no-build-isolation",
+                    "--no-deps",
+                    "--prefix={0}".format(self.prefix),
+                    ".",
+                )
 
     @run_after("install")
     @on_package_attributes(run_tests=True)
